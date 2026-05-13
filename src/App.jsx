@@ -6,7 +6,8 @@ import Grammar from './components/Grammar';
 import Practice from './components/Practice';
 import Suggestions from './components/Suggestions';
 
-import { X } from 'lucide-react';
+// ¡NUEVO! Agregamos Download a los iconos
+import { X, Download } from 'lucide-react';
 
 // Importaciones de Firebase unificadas y limpias
 import { initializeApp } from 'firebase/app';
@@ -33,7 +34,7 @@ export default function App() {
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [words, setWords] = useState([]);
   const [grammarRules, setGrammarRules] = useState([]);
-  const [suggestionsList, setSuggestionsList] = useState([]); // <--- NUEVO: Estado para sugerencias
+  const [suggestionsList, setSuggestionsList] = useState([]); 
   
   const [activeTab, setActiveTab] = useState('home');
   const [searchQuery, setSearchQuery] = useState('');
@@ -187,7 +188,6 @@ export default function App() {
     if (!isAdmin) return;
     setSyncStatus('syncing');
     try {
-      // 1. Guardar en el diccionario (pasando la 'reason' como 'example' para documentar etimología)
       await addDoc(collection(db, 'projects', appId, 'dictionary'), {
         term: sug.term,
         translation: sug.translation,
@@ -195,7 +195,6 @@ export default function App() {
         example: `Etimología: ${sug.reason}`,
         createdAt: new Date().toISOString()
       });
-      // 2. Borrar de la bandeja de sugerencias
       await deleteDoc(doc(db, 'projects', appId, 'suggestions', sug.id));
       setSyncStatus('synced');
     } catch (err) { setSyncStatus('error'); }
@@ -217,7 +216,7 @@ export default function App() {
     const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
     const link = document.createElement('a');
     link.setAttribute('href', dataUri);
-    link.setAttribute('download', `espanglish_backup.json`);
+    link.setAttribute('download', `esniglish_backup.json`);
     link.click();
   };
 
@@ -261,11 +260,11 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
 
+      {/* YA NO LE PASAMOS LA FUNCION exportData AL NAVBAR */}
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         syncStatus={syncStatus} 
-        exportData={exportData} 
         setShowAdminPanel={setShowAdminPanel} 
         isAdmin={isAdmin}
       />
@@ -290,9 +289,15 @@ export default function App() {
               )}
             </div>
             
+            {/* ¡AQUI MOVIMOS EL BOTON DE RESPALDO! */}
             <div className="flex items-center gap-2">
+               {user && isAdmin && (
+                  <button onClick={exportData} className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg text-xs font-bold transition-colors border border-emerald-500/30">
+                    <Download size={14} /> Respaldar BD
+                  </button>
+               )}
                {user && (
-                  <button onClick={logout} className="text-rose-400 hover:text-rose-300 text-xs font-bold px-3 py-1 bg-rose-400/10 rounded-lg transition-colors">
+                  <button onClick={logout} className="text-rose-400 hover:text-rose-300 text-xs font-bold px-3 py-1 bg-rose-400/10 rounded-lg transition-colors border border-rose-400/20">
                     Desconectar
                   </button>
                )}
@@ -352,10 +357,10 @@ export default function App() {
             login={login} 
             submitSuggestion={handleSubmitSuggestion} 
             categories={categories} 
-            isAdmin={isAdmin} // <--- ¡AQUÍ ESTÁ LA MAGIA QUE FALTABA!
-            suggestionsList={suggestionsList} // <--- ¡AQUÍ TAMBIÉN!
-            approveSuggestion={approveSuggestion} // <--- ¡Y AQUÍ!
-            rejectSuggestion={rejectSuggestion} // <--- ¡Y AQUÍ!
+            isAdmin={isAdmin}
+            suggestionsList={suggestionsList}
+            approveSuggestion={approveSuggestion}
+            rejectSuggestion={rejectSuggestion}
           />
         )}
       </main>
@@ -370,7 +375,7 @@ export default function App() {
             </div>
             <form onSubmit={handleSaveWord} className="p-6 space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-600">Término en Espanglish</label>
+                <label className="text-xs font-semibold text-slate-600">Término en Esniglish</label>
                 <input required className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-medium text-slate-900 text-sm transition-all" value={formData.term} onChange={e => setFormData({...formData, term: e.target.value})}/>
               </div>
               <div className="space-y-1">

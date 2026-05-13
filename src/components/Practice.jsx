@@ -98,15 +98,15 @@ export default function Practice({
     const activeObjSubjObj = pracObjSubjId !== 'none' ? pronounWords.find(p => p.id === pracObjSubjId) : null;
     const activeObjPronounObj = pronounWords.find(p => p.id === pracObjPronounId);
 
-    let espanglishSentence = "";
+    let esniglishSentence = "";
     let spanishTranslation = "";
-    let espanglishElements = [];
+    let esniglishElements = [];
 
     // --- LÓGICA MODOS SIMPLES ---
     if (pracMode === 'verbos' && activePronounObj && activeVerbObj) {
       const negSpa = pracIsNegative ? 'no ' : '';
       if (pracTiempo === 'Presente') {
-        espanglishElements = [
+        esniglishElements = [
           <span key="1" className="text-blue-400">{activePronounObj.term}</span>,
           pracIsNegative && <span key="2" className="text-rose-400">No</span>,
           <span key="3" className="text-slate-300">Ru</span>,
@@ -114,7 +114,7 @@ export default function Practice({
         ];
         spanishTranslation = `${activePronounObj.translation} ${negSpa}${activeVerbObj.translation.toLowerCase()}`;
       } else if (pracTiempo === 'Pasado') {
-        espanglishElements = [
+        esniglishElements = [
           <span key="1" className="text-blue-400">{activePronounObj.term}</span>,
           pracIsNegative && <span key="2" className="text-rose-400">No</span>,
           <span key="3" className="text-slate-300">Su</span>,
@@ -122,7 +122,7 @@ export default function Practice({
         ];
         spanishTranslation = `${activePronounObj.translation} ${negSpa}${activeVerbObj.translation.toLowerCase()} (pasado)`;
       } else if (pracTiempo === 'Futuro') {
-        espanglishElements = [
+        esniglishElements = [
           <span key="1" className="text-blue-400">{activePronounObj.term}</span>,
           pracIsNegative && <span key="2" className="text-rose-400">No</span>,
           <span key="3" className="text-slate-300">Fu</span>,
@@ -132,7 +132,7 @@ export default function Practice({
       }
     } 
     else if (pracMode === 'posesivos' && activePronounObj && activeNounObj) {
-      espanglishElements = [
+      esniglishElements = [
         <span key="1" className="text-amber-400">{activePronounObj.term}d</span>,
         <span key="2" className="text-white flex items-center">
           {activeNounObj.term}
@@ -147,13 +147,13 @@ export default function Practice({
     else if (pracMode === 'objetos' && activeVerbObj && activeObjPronounObj) {
       const objSpan = OBJETOS_MAP[activeObjPronounObj.term] || 'le';
       if (!activeObjSubjObj) {
-        espanglishElements = [
+        esniglishElements = [
           <span key="1" className="text-white">{activeVerbObj.term}</span>,
           <span key="2" className="text-blue-400">{activeObjPronounObj.term}</span>
         ];
         spanishTranslation = `${activeVerbObj.translation.toLowerCase()}${objSpan}`;
       } else {
-        espanglishElements = [
+        esniglishElements = [
           <span key="1" className="text-slate-300">{activeObjSubjObj.term}</span>,
           <span key="2" className="text-white">{activeVerbObj.term}</span>,
           <span key="3" className="text-blue-400">{activeObjPronounObj.term}</span>
@@ -169,29 +169,29 @@ export default function Practice({
       const objW = pronounWords.find(p => p.id === advObjId);
       const nounW = nounWords.find(n => n.id === advNounId);
 
-      // Builder Visual Espanglish
-      if (qW) espanglishElements.push(<span key="q1" className="text-fuchsia-400">{qW.term}</span>);
-      if (subjW) espanglishElements.push(<span key="s1" className="text-blue-400">{subjW.term}</span>);
-      if (advNeg) espanglishElements.push(<span key="s2" className="text-rose-400">No</span>);
-      if (advTime === 'Presente') espanglishElements.push(<span key="s3" className="text-slate-300">Ru</span>);
-      if (advTime === 'Pasado') espanglishElements.push(<span key="s4" className="text-slate-300">Su</span>);
-      if (advTime === 'Futuro') espanglishElements.push(<span key="s5" className="text-slate-300">Fu</span>);
-      if (verbW) espanglishElements.push(<span key="s6" className="text-white">{verbW.term}</span>);
+      // Builder Visual Esniglish
+      if (qW) esniglishElements.push(<span key="q1" className="text-fuchsia-400">{qW.term}</span>);
+      if (subjW) esniglishElements.push(<span key="s1" className="text-blue-400">{subjW.term}</span>);
+      if (advNeg) esniglishElements.push(<span key="s2" className="text-rose-400">No</span>);
+      if (advTime === 'Presente') esniglishElements.push(<span key="s3" className="text-slate-300">Ru</span>);
+      if (advTime === 'Pasado') esniglishElements.push(<span key="s4" className="text-slate-300">Su</span>);
+      if (advTime === 'Futuro') esniglishElements.push(<span key="s5" className="text-slate-300">Fu</span>);
+      if (verbW) esniglishElements.push(<span key="s6" className="text-white">{verbW.term}</span>);
       
       if (advObjId === 'NU_ARTICLE') {
-        espanglishElements.push(<span key="s7" className="text-cyan-400">Nu</span>);
+        esniglishElements.push(<span key="s7" className="text-cyan-400">Nu</span>);
       } else if (advObjId === 'BI_ARTICLE') {
-        espanglishElements.push(<span key="s7" className="text-purple-400">Bi</span>);
+        esniglishElements.push(<span key="s7" className="text-purple-400">Bi</span>);
       } else if (objW) {
         const displayTerm = nounW ? `${objW.term}d` : objW.term;
-        espanglishElements.push(<span key="s7" className={nounW ? "text-amber-400" : "text-blue-400"}>{displayTerm}</span>);
+        esniglishElements.push(<span key="s7" className={nounW ? "text-amber-400" : "text-blue-400"}>{displayTerm}</span>);
       }
 
-      if (nounW) espanglishElements.push(<span key="s8" className="text-emerald-400 flex items-center">{nounW.term}{advPlural ? <span className="text-emerald-300">n</span> : ''}</span>);
-      if (qW) espanglishElements.push(<span key="q2" className="text-fuchsia-400">?</span>);
+      if (nounW) esniglishElements.push(<span key="s8" className="text-emerald-400 flex items-center">{nounW.term}{advPlural ? <span className="text-emerald-300">n</span> : ''}</span>);
+      if (qW) esniglishElements.push(<span key="q2" className="text-fuchsia-400">?</span>);
 
-      if (espanglishElements.length === 0) {
-        espanglishElements = [<span key="empty" className="text-slate-600 italic text-xl md:text-2xl font-medium">Selecciona elementos para armar tu oración</span>];
+      if (esniglishElements.length === 0) {
+        esniglishElements = [<span key="empty" className="text-slate-600 italic text-xl md:text-2xl font-medium">Selecciona elementos para armar tu oración</span>];
       } else {
         // Builder Traducción Español Estructural
         let spaParts = [];
@@ -479,7 +479,7 @@ export default function Practice({
               
               <div className="relative z-10">
                 <div className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight flex items-center justify-center gap-3 flex-wrap">
-                  {espanglishElements}
+                  {esniglishElements}
                 </div>
                 
                 {spanishTranslation && (
@@ -496,7 +496,7 @@ export default function Practice({
                           <Info size={12} /> Traducción Estructural SVO
                         </span>
                         <p className="text-slate-400 text-xs mt-1.5 leading-relaxed">
-                          El Espanglish utiliza el orden lógico <b>(Sujeto + Verbo + Objeto)</b>. En español se adapta interpretando la acción directamente.
+                          El Esniglish utiliza el orden lógico <b>(Sujeto + Verbo + Objeto)</b>. En español se adapta interpretando la acción directamente.
                         </p>
                       </div>
                     ) : null}

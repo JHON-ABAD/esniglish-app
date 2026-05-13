@@ -11,7 +11,7 @@ export default function Home({ setActiveTab }) {
           <Sparkles size={14} /> El futuro del lenguaje es lógico
         </div>
         <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight mb-6">
-          Bienvenidos al <span className="text-blue-600">Espanglish</span>
+          Bienvenidos al <span className="text-blue-600">Esniglish</span>
         </h1>
         <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
           Un idioma construido desde la eficiencia, el respeto y la herencia cultural. 
@@ -34,7 +34,7 @@ export default function Home({ setActiveTab }) {
         </div>
       </section>
 
-      {/* SECCIÓN ETIMOLOGÍA (ES-PAN-GLISH) */}
+      {/* SECCIÓN ETIMOLOGÍA (ES-NI-GLISH) */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
         <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-6">
@@ -48,9 +48,9 @@ export default function Home({ setActiveTab }) {
 
         <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
           <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-6">
-            <span className="font-black text-xl">PAN</span>
+            <span className="font-black text-xl">NI</span>
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-3">Alma Japonesa (Japan)</h3>
+          <h3 className="text-xl font-bold text-slate-900 mb-3">Alma Japonesa (Nihongo)</h3>
           <p className="text-slate-500 text-sm leading-relaxed">
             La fonotáctica silábica (Consonante-Vocal) y el respeto gramatical. Un ritmo claro, pausado y profundamente estructurado.
           </p>

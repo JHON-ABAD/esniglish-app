@@ -6,7 +6,7 @@ export default function Grammar() {
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500 pb-12">
       <div className="text-center mb-10">
         <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Manual de Gramática</h2>
-        <p className="text-slate-500 mt-2 text-sm">Las reglas inquebrantables del Espanglish.</p>
+        <p className="text-slate-500 mt-2 text-sm">Las reglas inquebrantables del Esniglish.</p>
       </div>
 
       {/* Lección 1: Estructura Básica */}
@@ -74,7 +74,7 @@ export default function Grammar() {
             <div className="inline-flex bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase mb-3">Lección 4</div>
             <h2 className="text-lg font-bold text-slate-900 mb-2">La Sagrada Regla del Plural</h2>
             <p className="text-slate-600 text-sm leading-relaxed mb-4">
-              En Espanglish, la letra <b>N</b> sirve única y exclusivamente para pluralizar SUSTANTIVOS (objetos, animales, conceptos). <br/><br/>
+              En Esniglish, la letra <b>N</b> sirve única y exclusivamente para pluralizar SUSTANTIVOS (objetos, animales, conceptos). <br/><br/>
               <b>JAMÁS</b> se usa la N para pluralizar pronombres, adjetivos ni partículas. Esa es la deuda técnica de los idiomas antiguos.
             </p>
           </div>
@@ -131,7 +131,7 @@ export default function Grammar() {
         </div>
         <h2 className="text-2xl font-black mb-2 relative z-10 text-yellow-400">Economía del Lenguaje</h2>
         <p className="text-slate-300 text-sm leading-relaxed mb-6 relative z-10 max-w-2xl">
-          El Espanglish tiene un "Alma Dual". La <b>Escritura es Sagrada</b> y debe respetar las reglas matemáticas (sonando similar a la formalidad Japonesa). Pero al <b>Hablar Rápido</b>, se permite la contracción de fonemas, dándole la eficiencia y el ritmo del Inglés.
+          El Esniglish tiene un "Alma Dual". La <b>Escritura es Sagrada</b> y debe respetar las reglas matemáticas (sonando similar a la formalidad Japonesa). Pero al <b>Hablar Rápido</b>, se permite la contracción de fonemas, dándole la eficiencia y el ritmo del Inglés.
         </p>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">

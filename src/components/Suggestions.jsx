@@ -84,7 +84,7 @@ export default function Suggestions({ user, login, submitSuggestion, categories,
         </div>
         <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Buzón de Sugerencias</h2>
         <p className="text-slate-500 mt-2 text-sm max-w-md mx-auto">
-          Ayuda a expandir el Espanglish. Propón nuevas palabras con lógica y sentido.
+          Ayuda a expandir el Esniglish. Propón nuevas palabras con lógica y sentido.
         </p>
       </div>
 
@@ -95,7 +95,7 @@ export default function Suggestions({ user, login, submitSuggestion, categories,
         </h3>
         <ul className="text-sm text-slate-600 space-y-2 list-disc pl-5">
           <li><b>Cero Tolerancia:</b> Cualquier sugerencia que fomente el racismo, insultos u odio será eliminada permanentemente.</li>
-          <li><b>Lógica Estructural:</b> La palabra debe respetar las reglas de fonética y escritura del Espanglish.</li>
+          <li><b>Lógica Estructural:</b> La palabra debe respetar las reglas de fonética y escritura del Esniglish.</li>
           <li><b>Justificación:</b> Debes explicar el "por qué" de la palabra (su etimología o razón de ser). No aceptamos palabras sin contexto.</li>
         </ul>
       </div>
@@ -116,7 +116,7 @@ export default function Suggestions({ user, login, submitSuggestion, categories,
           <CheckCircle2 size={48} className="mx-auto text-emerald-500 mb-2" />
           <h3 className="text-xl font-bold text-emerald-800">¡Sugerencia Enviada!</h3>
           <p className="text-emerald-600 text-sm">
-            Gracias por contribuir al Espanglish. El administrador revisará tu palabra pronto.
+            Gracias por contribuir al Esniglish. El administrador revisará tu palabra pronto.
           </p>
         </div>
       ) : (
@@ -144,7 +144,7 @@ export default function Suggestions({ user, login, submitSuggestion, categories,
               <span>Justificación (Etimología)</span>
               <span className={`${formData.reason.length < 15 ? 'text-rose-400' : 'text-emerald-500'}`}>{formData.reason.length}/15 min</span>
             </label>
-            <textarea required placeholder="Explica por qué esta palabra tiene sentido en el Espanglish..." rows="3" className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 font-medium transition-all resize-none" value={formData.reason} onChange={e => setFormData({...formData, reason: e.target.value})}></textarea>
+            <textarea required placeholder="Explica por qué esta palabra tiene sentido en el Esniglish..." rows="3" className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 font-medium transition-all resize-none" value={formData.reason} onChange={e => setFormData({...formData, reason: e.target.value})}></textarea>
           </div>
 
           <button type="submit" disabled={formData.reason.length < 15} className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold shadow-md hover:bg-slate-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
