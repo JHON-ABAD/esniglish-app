@@ -6,15 +6,11 @@ import Grammar from './components/Grammar';
 import Practice from './components/Practice';
 import Suggestions from './components/Suggestions';
 
-// ¡NUEVO! Agregamos Download a los iconos
 import { X, Download } from 'lucide-react';
-
-// Importaciones de Firebase unificadas y limpias
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc } from 'firebase/firestore'; 
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
-// TUS LLAVES REALES DE FIREBASE
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "espanglish-bfa04.firebaseapp.com",
@@ -43,33 +39,60 @@ export default function App() {
   const [syncStatus, setSyncStatus] = useState('syncing');
   
   const categories = [
-    'Pronombre Personal', 'Pronombre de Objeto', 'Pronombre Interrogativo',
-    'Verbo', 'Partícula', 'Sustantivo', 'Adjetivo', 'Adverbio', 'Preposición', 
-    'Slang', 'Otro'
+    'Pronombre Personal', 
+    'Pronombre de Objeto', 
+    'Pronombre Interrogativo',
+    'Relativo', 
+    'Verbo', 
+    'Sustantivo', 
+    'Adjetivo', 
+    'Adverbio', 
+    'Preposición', 
+    'Posesivo', 
+    'Demostrativo', 
+    'Artículo', 
+    'Partícula'
   ];
 
-  const [formData, setFormData] = useState({ term: '', translation: '', category: 'Sustantivo', example: '' });
+  // ETIQUETAS LIMPIAS Y CON GERUNDIO Y KI AÑADIDOS
+  const systemTagsList = [
+    { value: '', label: '-- Ninguno (Palabra normal) --' },
+    { value: 'system_interrogativo_base', label: 'Marcador: Pregunta Sí/No (Base)' },
+    { value: 'system_presente', label: 'Marcador: Presente' },
+    { value: 'system_pasado', label: 'Marcador: Pasado' },
+    { value: 'system_futuro', label: 'Marcador: Futuro' },
+    { value: 'system_gerundio', label: 'Marcador: Gerundio (Estar/Ando/Iendo)' },
+    { value: 'system_condicional', label: 'Marcador: Condicional (-ría)' },
+    { value: 'system_imperfecto', label: 'Marcador: Imperfecto (-aba)' },
+    { value: 'system_plural', label: 'Marcador: Plural' },
+    { value: 'system_negativo', label: 'Marcador: Negación' },
+    { value: 'system_art_def', label: 'Artículo: Definido' },
+    { value: 'system_art_indef', label: 'Artículo: Indefinido' }
+  ];
 
-  // Estados Práctica
+  const [formData, setFormData] = useState({ term: '', translation: '', category: 'Sustantivo', example: '', systemTag: '' });
+
+  // ESTADOS INICIALES LIMPIOS 
   const [pracMode, setPracMode] = useState('oraciones');
-  const [pracPronounId, setPracPronounId] = useState('');
-  const [pracVerbId, setPracVerbId] = useState('');
-  const [pracNounId, setPracNounId] = useState('');
-  const [pracTiempo, setPracTiempo] = useState('Presente');
+  const [pracPronounId, setPracPronounId] = useState('none');
+  const [pracVerbId, setPracVerbId] = useState('none');
+  const [pracNounId, setPracNounId] = useState('none');
+  const [pracTiempo, setPracTiempo] = useState('none');
+  const [pracGerundio, setPracGerundio] = useState(false); // NUEVO ESTADO PARA GERUNDIO
   const [isPluralNoun, setIsPluralNoun] = useState(false);
   const [pracIsNegative, setPracIsNegative] = useState(false);
   const [pracObjSubjId, setPracObjSubjId] = useState('none'); 
-  const [pracObjPronounId, setPracObjPronounId] = useState('');
+  const [pracObjPronounId, setPracObjPronounId] = useState('none');
 
   const [advSubjId, setAdvSubjId] = useState('none');
   const [advNeg, setAdvNeg] = useState(false);
-  const [advTime, setAdvTime] = useState('Presente');
+  const [advTime, setAdvTime] = useState('none');
+  const [advGerundio, setAdvGerundio] = useState(false); // NUEVO ESTADO PARA GERUNDIO EN ORACIONES
   const [advVerbId, setAdvVerbId] = useState('none');
   const [advObjId, setAdvObjId] = useState('none');
   const [advNounId, setAdvNounId] = useState('none');
   const [advPlural, setAdvPlural] = useState(false);
 
-  // ZONA DE SEGURIDAD
   const ADMIN_UID = "Y4p71TJsnZOGvfJaAyqPklpScav2";
   const isAdmin = user?.uid === ADMIN_UID;
 
@@ -96,7 +119,6 @@ export default function App() {
     setShowAdminPanel(false);
   };
 
-  // --- LECTURA DE BASE DE DATOS ---
   useEffect(() => {
     const dictRef = collection(db, 'projects', appId, 'dictionary');
     const unsubDict = onSnapshot(dictRef, (snapshot) => {
@@ -112,7 +134,6 @@ export default function App() {
     return () => { unsubDict(); unsubGram(); };
   }, []);
 
-  // --- LECTURA SECRETA DE SUGERENCIAS (Solo Admin) ---
   useEffect(() => {
     if (!isAdmin) {
       setSuggestionsList([]);
@@ -128,22 +149,7 @@ export default function App() {
   const verbWords = useMemo(() => words.filter(w => w.category === 'Verbo'), [words]);
   const pronounWords = useMemo(() => words.filter(w => w.category === 'Pronombre Personal'), [words]);
   const nounWords = useMemo(() => words.filter(w => w.category === 'Sustantivo'), [words]);
-  
-  useEffect(() => {
-    if (!pracVerbId && verbWords.length > 0) setPracVerbId(verbWords[0].id);
-    else if (verbWords.length > 0 && !verbWords.find(v => v.id === pracVerbId)) setPracVerbId(verbWords[0].id);
 
-    if (!pracPronounId && pronounWords.length > 0) setPracPronounId(pronounWords[0].id);
-    else if (pronounWords.length > 0 && !pronounWords.find(p => p.id === pracPronounId)) setPracPronounId(pronounWords[0].id);
-
-    if (!pracNounId && nounWords.length > 0) setPracNounId(nounWords[0].id);
-    else if (nounWords.length > 0 && !nounWords.find(n => n.id === pracNounId)) setPracNounId(nounWords[0].id);
-
-    if (!pracObjPronounId && pronounWords.length > 0) setPracObjPronounId(pronounWords[0].id);
-    else if (pronounWords.length > 0 && !pronounWords.find(p => p.id === pracObjPronounId)) setPracObjPronounId(pronounWords[0].id);
-  }, [verbWords, pronounWords, nounWords, pracVerbId, pracPronounId, pracNounId, pracObjPronounId]);
-
-  // --- FUNCIONES CRUD DICCIONARIO ---
   const handleSaveWord = async (e) => {
     e.preventDefault();
     if (!isAdmin) return alert("Solo el administrador puede hacer esto.");
@@ -166,7 +172,6 @@ export default function App() {
     }
   };
 
-  // --- FUNCIONES DEL BUZÓN DE SUGERENCIAS ---
   const handleSubmitSuggestion = async (suggestionData) => {
     if (!user) return;
     setSyncStatus('syncing');
@@ -223,10 +228,10 @@ export default function App() {
   const openModal = (word = null) => {
     if (word) {
       setEditingWord(word);
-      setFormData({ term: word.term, translation: word.translation, category: word.category, example: word.example });
+      setFormData({ term: word.term, translation: word.translation || '', category: word.category, example: word.example || '', systemTag: word.systemTag || '' });
     } else {
       setEditingWord(null);
-      setFormData({ term: '', translation: '', category: 'Verbo', example: '' });
+      setFormData({ term: '', translation: '', category: 'Sustantivo', example: '', systemTag: '' });
     }
     setIsModalOpen(true);
   };
@@ -255,12 +260,10 @@ export default function App() {
       }
     });
     return groups;
-  }, [filteredWords]);
+  }, [filteredWords, categories]);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
-
-      {/* YA NO LE PASAMOS LA FUNCION exportData AL NAVBAR */}
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -269,11 +272,8 @@ export default function App() {
         isAdmin={isAdmin}
       />
 
-      {/* --- PANEL SECRETO DE ADMINISTRADOR --- */}
       {showAdminPanel && (
         <div className="max-w-6xl mx-auto px-6 pt-4 space-y-4 animate-in slide-in-from-top-4 mb-4">
-          
-          {/* Barra superior del panel */}
           <div className="bg-slate-800 text-white p-3 rounded-xl flex items-center justify-between shadow-md border border-slate-700">
             <div className="flex items-center gap-3">
               <span className="text-sm font-semibold text-slate-300">Acceso Restringido:</span>
@@ -289,7 +289,6 @@ export default function App() {
               )}
             </div>
             
-            {/* ¡AQUI MOVIMOS EL BOTON DE RESPALDO! */}
             <div className="flex items-center gap-2">
                {user && isAdmin && (
                   <button onClick={exportData} className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 rounded-lg text-xs font-bold transition-colors border border-emerald-500/30">
@@ -310,7 +309,6 @@ export default function App() {
       )}
 
       <main className="max-w-6xl mx-auto p-6 md:p-8">
-
         {activeTab === 'home' && <Home setActiveTab={setActiveTab} />}
 
         {activeTab === 'practice' && (
@@ -321,13 +319,14 @@ export default function App() {
             pracVerbId={pracVerbId} setPracVerbId={setPracVerbId}
             pracNounId={pracNounId} setPracNounId={setPracNounId}
             pracTiempo={pracTiempo} setPracTiempo={setPracTiempo}
+            pracGerundio={pracGerundio} setPracGerundio={setPracGerundio}
             isPluralNoun={isPluralNoun} setIsPluralNoun={setIsPluralNoun}
             pracIsNegative={pracIsNegative} setPracIsNegative={setPracIsNegative}
             pracObjSubjId={pracObjSubjId} setPracObjSubjId={setPracObjSubjId}
-            pracObjPronounId={pracObjPronounId} setPracObjPronounId={setPracObjPronounId}
             advSubjId={advSubjId} setAdvSubjId={setAdvSubjId}
             advNeg={advNeg} setAdvNeg={setAdvNeg}
             advTime={advTime} setAdvTime={setAdvTime}
+            advGerundio={advGerundio} setAdvGerundio={setAdvGerundio}
             advVerbId={advVerbId} setAdvVerbId={setAdvVerbId}
             advObjId={advObjId} setAdvObjId={setAdvObjId}
             advNounId={advNounId} setAdvNounId={setAdvNounId}
@@ -365,29 +364,41 @@ export default function App() {
         )}
       </main>
 
-      {/* Modal Añadir/Editar */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
             <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-white">
               <h2 className="font-bold text-lg text-slate-900">{editingWord ? 'Editar Término' : 'Nuevo Término'}</h2>
               <button onClick={closeModal} className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"><X size={18}/></button>
             </div>
-            <form onSubmit={handleSaveWord} className="p-6 space-y-4">
+            <form onSubmit={handleSaveWord} className="p-6 space-y-4 overflow-y-auto">
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-600">Término en Esniglish</label>
                 <input required className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-medium text-slate-900 text-sm transition-all" value={formData.term} onChange={e => setFormData({...formData, term: e.target.value})}/>
               </div>
+              
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-600">Significado en Español</label>
-                <input required className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-medium text-slate-900 text-sm transition-all" value={formData.translation} onChange={e => setFormData({...formData, translation: e.target.value})}/>
+                <label className="text-xs font-semibold text-slate-600">Significado en Español (Opcional para partículas)</label>
+                <input className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-medium text-slate-900 text-sm transition-all" value={formData.translation} onChange={e => setFormData({...formData, translation: e.target.value})}/>
               </div>
+
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-600">Categoría</label>
                 <select className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-medium text-slate-900 text-sm transition-all" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
+
+              <div className="space-y-1 p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                <label className="text-xs font-semibold text-indigo-600 flex items-center gap-1">
+                  Rol de Sistema (Solo Admin)
+                </label>
+                <p className="text-[10px] text-slate-500 mb-2 leading-tight">Usa esto solo si la palabra es una partícula estructural o artículo para que el generador la encuentre automáticamente.</p>
+                <select className="w-full p-2 rounded-md border border-indigo-200 focus:ring-2 focus:ring-indigo-500 bg-white outline-none font-medium text-indigo-900 text-sm transition-all" value={formData.systemTag} onChange={e => setFormData({...formData, systemTag: e.target.value})}>
+                  {systemTagsList.map(tag => <option key={tag.value} value={tag.value}>{tag.label}</option>)}
+                </select>
+              </div>
+
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-slate-600">Contexto / Ejemplo (Opcional)</label>
                 <textarea className="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-medium text-slate-900 text-sm transition-all resize-none" rows="2" value={formData.example} onChange={e => setFormData({...formData, example: e.target.value})}></textarea>
