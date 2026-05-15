@@ -1,9 +1,9 @@
-<img width="1919" height="971" alt="Captura de pantalla 2026-05-14 193312" src="https://github.com/user-attachments/assets/038bc360-6c04-49b1-9edd-84fb00fcefdb" /># 🌐 Esniglish Web App
+# 🌐 Esniglish Web App
 
 [![Deploy to Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://esniglish-app.vercel.app/)
 
 > El futuro del lenguaje es lógico. Plataforma educativa interactiva para aprender Esniglish, un idioma construido desde la eficiencia, el respeto y la herencia cultural (diseñado para ser hablado con la velocidad del inglés y la claridad del japonés).
-
+<img width="1919" height="971" alt="Captura de pantalla 2026-05-14 193312" src="https://github.com/user-attachments/assets/038bc360-6c04-49b1-9edd-84fb00fcefdb" />
 <img width="1893" height="912" alt="Captura de pantalla 2026-05-14 202931" src="https://github.com/user-attachments/assets/b09092a8-28af-43a9-900a-5914091df544" />
 
 ## 🚀 Características Principales
